@@ -2,7 +2,7 @@
 
 ######Cosa è stato aggiunto?#########
 
-E' stata modificata la visualizzzione dei dizionari (print(dictionary)) in modo da non prendere troppo
+E' stata modificata la visualizzazione dei dizionari (print(dictionary)) in modo da non prendere troppo
 spazio
 
 
@@ -11,7 +11,7 @@ spazio
 
 
 
-------------------------------------MultiLabelBird.ipynb----------------------------------------------
+------------------------------------MultiLabelBird.ipynb-----------------------------------------------
 
 
 #######Come modificare il codice######
