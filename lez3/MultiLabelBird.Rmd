@@ -1,0 +1,463 @@
+---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.4.1
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+<!-- #region colab_type="text" id="gYu7Fv6AeN3O" -->
+## **Downloading the libraries:**
+<!-- #endregion -->
+
+```{python colab={}, colab_type="code", id="lkMPI5N5e--d"}
+#zero line : we disable Jupyter's autosave
+#First and second line : we always obtain updated functions, classes, methods..   (last version) from a specific library
+#Third line : memorize the graph in the notebook file
+# %autosave 0
+# %reload_ext autoreload 
+# %autoreload 2 
+# %matplotlib inline 
+```
+
+```{python colab={}, colab_type="code", id="A08LwTAteJU5"}
+from fastai.vision import *
+```
+
+<!-- #region colab_type="text" id="QUSz1xRneU2e" -->
+## **Obtaining data:**
+
+<!-- #endregion -->
+
+<!-- #region colab_type="text" id="0ujnuVy7oTfP" -->
+#### Downloading data trought Kaggle API
+<!-- #endregion -->
+
+```{python colab={}, colab_type="code", id="7P-UNbgUejPu"}
+#Before to run the two lines of code drag and drop the kaggle.json file into the working directory (/content)--->default path when you open Colab
+# ! mkdir -p ~/.kaggle/
+# ! mv kaggle.json ~/.kaggle/
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 34}, colab_type="code", executionInfo={'elapsed': 551, 'status': 'ok', 'timestamp': 1585473853882, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="PLNqH-PMe29H", outputId="bc62212c-2d83-4f35-f7b5-d960362223d4"}
+path = Config.data_path()/'bird'
+path.mkdir(parents=True, exist_ok=True)
+path
+```
+
+```{python colab={}, colab_type="code", id="KUOZ_cmYfGuB"}
+# !chmod 600 /root/.kaggle/kaggle.json  #to fix the warning "Your Kaggle API key is readable by other users on this system..."
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 391}, colab_type="code", executionInfo={'elapsed': 1907, 'status': 'ok', 'timestamp': 1585473862147, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="WRk2icgcfItZ", outputId="2291e6a1-76d9-4edd-fd03-43d72fc62dd1"}
+# !kaggle competitions list --csv # we test if we are connected to Kaggle API. We print the list of opened competitions
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 7836, 'status': 'ok', 'timestamp': 1585473873412, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="YPD52D5mfxpj", outputId="01f58047-26d8-4a8a-a29c-b00c458bfaa4"}
+# !kaggle competitions download -c multilabel-bird-species-classification-nips2013 -p {path} --force #we download the file in our path
+```
+
+<!-- #region colab_type="text" id="A6bM5_cknECN" -->
+#### Decompressing files and directories eploration
+<!-- #endregion -->
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 68}, colab_type="code", executionInfo={'elapsed': 1703, 'status': 'ok', 'timestamp': 1585473879683, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="FTAGBDb1grN2", outputId="8b44cc83-b6de-4307-8457-66247da0ab7f"}
+# !ls /root/.fastai/data/bird  #ls--> shell command to see the file into a specific directory
+```
+
+```{python colab={}, colab_type="code", id="6WLgwTDjhfQE"}
+# !python -m tarfile -e {path}/NIPS4B_BIRD_CHALLENGE_TRAIN_LABELS.tar /root/.fastai/data/bird  #decompressing NIPS4B_BIRD_CHALLENGE_TRAIN_LABELS.tar
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 85}, colab_type="code", executionInfo={'elapsed': 1961, 'status': 'ok', 'timestamp': 1585473899011, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="QoSgS291k-R0", outputId="38a01ab9-f483-4d48-cf11-e2cf533e7c5c"}
+# !ls /root/.fastai/data/bird
+```
+
+```{python colab={}, colab_type="code", id="Rg5SwssnmTKc"}
+# !python -m tarfile -e {path}/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV.tar.gz /root/.fastai/data/bird #decompressing NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV.tar.gz
+
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 102}, colab_type="code", executionInfo={'elapsed': 1878, 'status': 'ok', 'timestamp': 1585473913771, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="cpO5lMhPlFMC", outputId="5373304b-964f-4a03-c9cc-4a6c1f63f606"}
+# !ls /root/.fastai/data/bird
+
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 34}, colab_type="code", executionInfo={'elapsed': 1646, 'status': 'ok', 'timestamp': 1585473918682, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="Ek0GvJ9mmz-J", outputId="2c36fbdf-7ba3-4753-ecf7-e6f2201914bc"}
+# !ls /root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV  #eplore our directory with wav files
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 1448, 'status': 'ok', 'timestamp': 1585473922602, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="WmbSIXakmk-q", outputId="4b0d5000-d5f6-49cd-f8ab-d670dcd9184c"}
+# !ls /root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train | head -10   #print first 10 lines inside NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train dirtectory
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 1875, 'status': 'ok', 'timestamp': 1585473927725, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="nljZqTIdoMLj", outputId="ca55a820-75d4-4131-82e2-1b7513754a09"}
+# !ls /root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train | tail -10   #print last 10 lines inside NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train dirtectory
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 238}, colab_type="code", executionInfo={'elapsed': 1608, 'status': 'ok', 'timestamp': 1585473931232, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="DowAPbVqoLZ5", outputId="799dee6a-2e6b-41bc-c4f3-d7c3cc0e46d8"}
+# !ls {path}/NIPS4B_BIRD_CHALLENGE_TRAIN_LABELS  #explore NIPS4B_BIRD_CHALLENGE_TRAIN_LABELS
+```
+
+```{python colab={}, colab_type="code", id="gzC_TgJ8ptrp"}
+#we want to open README.txt file
+DescriptionTXT = open("/root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_LABELS/README.txt","r+")
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 972}, colab_type="code", executionInfo={'elapsed': 507, 'status': 'ok', 'timestamp': 1585473939971, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="fIDjj35zqKZi", outputId="d1234d54-dc93-48d1-cbea-e3dda8e9e426"}
+print(DescriptionTXT.read())
+```
+
+<!-- #region colab_type="text" id="s24d6UGWhNpy" -->
+## **Transforming label tabel**
+<!-- #endregion -->
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 304}, colab_type="code", executionInfo={'elapsed': 545, 'status': 'ok', 'timestamp': 1585473956601, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="swqy811e1mjg", outputId="488729ea-553a-4ae5-b8bc-986b1a93491a"}
+#We convert nips4b_birdchallenge_train_labels.csv to dataframe
+df = pd.read_csv(path/'NIPS4B_BIRD_CHALLENGE_TRAIN_LABELS/nips4b_birdchallenge_train_labels.csv')
+df.head()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 270}, colab_type="code", executionInfo={'elapsed': 548, 'status': 'ok', 'timestamp': 1585473959821, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="emegWTndHFc-", outputId="5e7e0904-932e-4e07-9134-56968e95931c"}
+df = df.drop(['Unnamed: 1','Unnamed: 3'],axis=1)   #We drop column 1 and 3
+df.head()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 270}, colab_type="code", executionInfo={'elapsed': 584, 'status': 'ok', 'timestamp': 1585473965453, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="vkk_4IKEJEy8", outputId="aa022e12-0169-4007-92fa-dee07b7d3999"}
+df.at[0,'Unnamed: 0'] = "Filename"  #Changing values in first row
+df.at[0, 'Unnamed: 2'] = "Empty"
+df.head()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 270}, colab_type="code", executionInfo={'elapsed': 561, 'status': 'ok', 'timestamp': 1585473968639, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="h5xl3E_xQv6q", outputId="3bfe822b-eb3f-4fe4-e95a-7723a6b349f1"}
+df = df.drop(1) #drop row 2
+df.head()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 253}, colab_type="code", executionInfo={'elapsed': 607, 'status': 'ok', 'timestamp': 1585473972517, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="THueYLktRUO8", outputId="739bd6cb-bb1e-4815-ce8f-d5031864dd92"}
+df.columns = df.iloc[0]  #taking la label from row 1 from 
+df = df.drop(0) #drop row 1
+df.head()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 408}, colab_type="code", executionInfo={'elapsed': 572, 'status': 'ok', 'timestamp': 1585473976323, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="pi-XDPJk6Kv_", outputId="d8874d74-5c43-4839-dfaa-6af58327e6a1"}
+df.tail(10)
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 54}, colab_type="code", executionInfo={'elapsed': 673, 'status': 'ok', 'timestamp': 1585473980368, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="BQFNkWk8SIiL", outputId="a17f35dc-4e10-4314-fe36-a6a0c91a244a"}
+#convert a dataframe to dictionary
+df_dict = df.to_dict('index')
+print(df_dict)
+```
+
+```{python colab={}, colab_type="code", id="r1hP5pKzpiV5"}
+del df_dict[689] #we remove the last line it the dictionary
+```
+
+```{python colab={}, colab_type="code", id="utlO0M_UVHH_"}
+#create a dictionary in format {wav1:[tag1, tag2,...tagn],wav2:[ta1,tag2,....tagn].....wavm[tag1,tag2...tagn]}
+df_dict_correct = {}
+
+for key,value in df_dict.items():
+  for key2,value2 in value.items():
+    if key2 == "Filename":
+      audio = value2
+      df_dict_correct[audio] = []
+    if str(value2) != str('nan') and key2 != "Filename" :
+      df_dict_correct[audio].append(key2)
+    
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 54}, colab_type="code", executionInfo={'elapsed': 509, 'status': 'ok', 'timestamp': 1585473990960, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="xzH5hMNjxFKx", outputId="708462f0-53c8-427b-b833-7d09407e680f"}
+print(df_dict_correct)
+```
+
+```{python colab={}, colab_type="code", id="rW0dGh2y7J4k"}
+df_dict_correct2 = {}
+df_dict_correct2['File_audio'] = []
+df_dict_correct2['Tags'] = []
+
+for key,value in df_dict_correct.items():
+  df_dict_correct2['File_audio'].append(key)
+  valueString = ""
+  for stringa in value:
+    valueString = valueString +" "+ stringa
+  df_dict_correct2['Tags'].append(valueString)
+
+
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 54}, colab_type="code", executionInfo={'elapsed': 571, 'status': 'ok', 'timestamp': 1585473999098, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="3OsIvyXHCb5y", outputId="443496c5-5a97-4ab0-a8b0-2f659c7ea888"}
+print(df_dict_correct2)
+```
+
+```{python colab={}, colab_type="code", id="ursKi3fLC1N6"}
+#Convert our dictionary to dataframe for the ML algoritm:
+
+df_training_label = pd.DataFrame.from_dict(df_dict_correct2)
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 419}, colab_type="code", executionInfo={'elapsed': 633, 'status': 'ok', 'timestamp': 1585474004693, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="NlzuhNO7DjCD", outputId="20767a18-c68e-4ce2-c67b-8c6c74b04fea"}
+df_training_label
+```
+
+```{python colab={}, colab_type="code", id="JFcb0_r0AWig"}
+df_training_label.to_csv(os.path.join(path,r'label_training.csv'), index = False) #we create a csv in the correct path
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 119}, colab_type="code", executionInfo={'elapsed': 1568, 'status': 'ok', 'timestamp': 1585474018905, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="pWc06Gyn-Wp7", outputId="889cafaf-cb43-4be1-b3fc-fb141a9c457e"}
+# !ls /root/.fastai/data/bird/
+```
+
+<!-- #region colab_type="text" id="vnXG2XqhFpO8" -->
+## **Obtaining image from wav audio :**
+<!-- #endregion -->
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 1810, 'status': 'ok', 'timestamp': 1585474028732, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="hmmtwufSD091", outputId="0b99dace-764b-4e1d-c09e-db4ba7af608f"}
+# !ls /root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train | head -10 
+```
+
+```{python colab={}, colab_type="code", id="dPnoc4ncGIDk"}
+import os
+import wave
+import pylab
+```
+
+```{python colab={}, colab_type="code", id="UXaHWF8wqnZV"}
+import numpy as np
+import matplotlib.pyplot as plt
+x = np.arange(1000)
+y = np.sin(x)
+
+for i in range(5):
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(x, y)
+    plt.close(fig)
+```
+
+```{python colab={}, colab_type="code", id="btBA6oUL3Ay6"}
+#functions to converts wav to png image
+
+def graph_spectrogram(wav_file,path_to_Save = ""):
+    sound_info, frame_rate = get_wav_info(wav_file)
+    pylab.figure(num=None, figsize=(19, 12))
+    pylab.subplot(111)
+    pylab.title('spectrogram of %r' % wav_file)
+    pylab.specgram(sound_info, Fs=frame_rate)
+    audioName = wav_file[len(wav_file)-29:]
+    pylab.savefig(path_to_Save + '/' + audioName + '.png')
+    plt.close()
+def get_wav_info(wav_file):
+    wav = wave.open(wav_file, 'r')
+    frames = wav.readframes(-1)
+    sound_info = pylab.fromstring(frames, 'int16')
+    frame_rate = wav.getframerate()
+    wav.close()
+    return sound_info, frame_rate
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 770}, colab_type="code", executionInfo={'elapsed': 6059, 'status': 'ok', 'timestamp': 1585402240214, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -60}, id="j0HivsuG5gtw", outputId="bf5c27c7-3453-420e-f2ea-45272f1ee8d2"}
+#A test to convert one wav to image  !!! Don't run! It doesn't show the image because I have modify the function WAV to PNG!!!
+#It only convert the wav file to png image and save it in a specific path
+
+graph_spectrogram("/root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train/nips4b_birds_trainfile001.wav","/root/.fastai/data/bird")
+```
+
+<!-- #region colab_type="text" id="udZIhWV1QKw6" -->
+#### Create Images from WAV Training files
+<!-- #endregion -->
+
+```{python colab={}, colab_type="code", id="xclR9llyRppH"}
+# !mkdir '/root/.fastai/data/bird/PNG_training_images'
+```
+
+```{python colab={}, colab_type="code", id="AH2fklef3QGn"}
+Listpath = ["/root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train/" + f for f in os.listdir("/root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/train")]
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 539, 'status': 'ok', 'timestamp': 1585475104625, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="ZjNH2YyB4BR7", outputId="25636feb-6387-4f4f-e8e3-3f4f32dc3edd"}
+Listpath[:10]
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 105}, colab_type="code", executionInfo={'elapsed': 430501, 'status': 'ok', 'timestamp': 1585475538982, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="9NMZahXY6f_D", outputId="e40aab71-0c14-4d49-f887-d26f74b29f3d"}
+#We convert all wav in train directory to PNG image. It takes about 10 minutes.
+for path in Listpath:
+  graph_spectrogram(path,"/root/.fastai/data/bird/PNG_training_images")
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 1746, 'status': 'ok', 'timestamp': 1585475566938, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="x5TfTDMH0cow", outputId="a647bd0f-5663-49e7-e656-b73718fda72b"}
+# !ls /root/.fastai/data/bird/PNG_training_images | head -10 #First ten images converted from wav audio files
+```
+
+<!-- #region colab_type="text" id="ZRfkSWaOQfWb" -->
+#### Creating Images from WAV Test files
+<!-- #endregion -->
+
+```{python colab={}, colab_type="code", id="5fw56LcxRMql"}
+# !mkdir '/root/.fastai/data/bird/PNG_test_images'
+```
+
+```{python colab={}, colab_type="code", id="W0YmL3ETRWbV"}
+ListpathTest = ["/root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/test/" + f for f in os.listdir("/root/.fastai/data/bird/NIPS4B_BIRD_CHALLENGE_TRAIN_TEST_WAV/test")]
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 549, 'status': 'ok', 'timestamp': 1585475665328, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="jWxzJhprSEOg", outputId="558d48ca-8dcd-4286-85c7-10c38f4e54fc"}
+ListpathTest[:10]
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 71}, colab_type="code", executionInfo={'elapsed': 635980, 'status': 'ok', 'timestamp': 1585476320262, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="OO8wpAFbSJiS", outputId="258309e2-1cc3-4406-9900-8afb367f67d8"}
+for path in ListpathTest:  #It takes about 10 minutes.
+  graph_spectrogram(path,"/root/.fastai/data/bird/PNG_test_images")
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 1854, 'status': 'ok', 'timestamp': 1585476697724, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="inWYHvMcbSgo", outputId="df28462b-5479-4ec4-a9fd-fe89cb6be0d9"}
+# !ls "/root/.fastai/data/bird/PNG_test_images" | tail -10
+```
+
+<!-- #region colab_type="text" id="9nLk_e8o7gIM" -->
+## **Creating Deep Learning model**
+<!-- #endregion -->
+
+```{python colab={}, colab_type="code", id="5fGA_WPLyQl8"}
+path = Config.data_path()/'bird' #Because the path was modified when we converted WAV audios to PNG images
+```
+
+```{python colab={}, colab_type="code", id="dv0KsnU671PX"}
+tfms = get_transforms(flip_vert=True, max_lighting=0.1, max_zoom=1.0, max_warp=0.)
+```
+
+```{python colab={}, colab_type="code", id="51SdrRG_78U0"}
+np.random.seed(42)
+src = (ImageList.from_csv(path, 'label_training.csv', folder='PNG_training_images', suffix='.png')
+       .split_by_rand_pct(0.2)
+       .label_from_df(label_delim=' '))
+```
+
+```{python colab={}, colab_type="code", id="gesVTudjCsr1"}
+data = (src.transform(tfms, size=128)  #I don't apply any kind of trasformation!!!
+        .databunch().normalize(imagenet_stats))
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 1000}, colab_type="code", executionInfo={'elapsed': 4860, 'status': 'ok', 'timestamp': 1585485161665, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="M_UHdrWQFP5V", outputId="6d28f6ce-add6-4868-c028-0c1123a2625a"}
+data.show_batch(rows=3, figsize=(20,20))
+
+```
+
+```{python colab={}, colab_type="code", id="b0Qg0g7yJGjL"}
+arch = models.resnet50
+```
+
+```{python colab={}, colab_type="code", id="cGbkGOXtJHem"}
+acc_02 = partial(accuracy_thresh, thresh=0.2)
+f_score = partial(fbeta, thresh=0.2)
+learn = cnn_learner(data, arch, metrics=[acc_02, f_score])
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 453}, colab_type="code", executionInfo={'elapsed': 212348, 'status': 'ok', 'timestamp': 1585485400125, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="j89mj0dcJSfT", outputId="e6602bc4-138b-4484-e06a-f8952a9b5d40"}
+learn.lr_find()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 279}, colab_type="code", executionInfo={'elapsed': 952, 'status': 'ok', 'timestamp': 1585485405183, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="fhdm5ysSKO2G", outputId="5d6d75cd-4f7f-4dcb-cf6a-7c419eb5be19"}
+learn.recorder.plot()
+
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 359}, colab_type="code", executionInfo={'elapsed': 225324, 'status': 'ok', 'timestamp': 1585485636948, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="c4UlYjY6KaKm", outputId="ccd387e5-0889-4c04-b372-4ba685550a4d"}
+learn.fit_one_cycle(10, slice(0.01))
+```
+
+```{python colab={}, colab_type="code", id="ZI09u5f6zlt_"}
+learn.save('resnet50_stage1')
+```
+
+<!-- #region colab_type="text" id="u__6UNXG0YAD" -->
+#### Fine-Tuning:
+<!-- #endregion -->
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 715}, colab_type="code", executionInfo={'elapsed': 203159, 'status': 'ok', 'timestamp': 1585485851644, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="jNakhJFrw2gA", outputId="96c19c67-af8f-4980-debe-f68a283cdaf3"}
+learn.unfreeze() # unfreeze all layers
+
+learn.lr_find() # find learning rate
+learn.recorder.plot() # plot learning rate
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 204}, colab_type="code", executionInfo={'elapsed': 112774, 'status': 'ok', 'timestamp': 1585485978126, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="veQd8PvF1N_K", outputId="40e40962-1c1a-4ec5-fbb8-b4c6b68137a6"}
+learn.fit_one_cycle(5, slice(1e-5, 1e-3))
+```
+
+```{python colab={}, colab_type="code", id="oEG3x6gB21tb"}
+learn.save('resnet50_stage2')
+```
+
+```{python colab={}, colab_type="code", id="97EpVxa93QaM"}
+data = (src.transform(tfms, size=256)  #I don't apply any kind of trasformation!!!
+        .databunch().normalize(imagenet_stats))
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 1000, 'output_embedded_package_id': '1-IKw3vBI776luOoYgUVgrC2q3dr3r2tA'}, colab_type="code", executionInfo={'elapsed': 9101, 'status': 'ok', 'timestamp': 1585486071627, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="bPrlwtrv3aPi", outputId="178a067d-da52-4ec8-d43f-4b2d180b24ba"}
+data.show_batch(rows=3, figsize=(20,20))
+```
+
+```{python colab={}, colab_type="code", id="g6TZEbNo3tFD"}
+learn.freeze()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 715}, colab_type="code", executionInfo={'elapsed': 72446, 'status': 'ok', 'timestamp': 1585486383584, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="z2CIE_6-31Sk", outputId="d508e3f1-c81e-4b61-c48c-ba404ec611eb"}
+learn.lr_find()
+learn.recorder.plot()
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 204}, colab_type="code", executionInfo={'elapsed': 164038, 'status': 'ok', 'timestamp': 1585486562600, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="TH99VCdK5PQ1", outputId="bff63dd0-d28b-4a7c-f0f6-0e147b83dfb2"}
+learn.fit_one_cycle(5, slice(1e-5, 1e-2))
+```
+
+```{python colab={}, colab_type="code", id="flgT28bG6DdI"}
+learn.save('resnet50_256_stage1')
+```
+
+<!-- #region colab_type="text" id="2DVHmTYs63zm" -->
+## **Predicting the Test Images and Kaggle submission**
+<!-- #endregion -->
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 1000}, colab_type="code", executionInfo={'elapsed': 1427, 'status': 'ok', 'timestamp': 1585487266884, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="gt-yhH2SXSjC", outputId="9a7dffe6-2dc4-4236-bc08-4cbeddc2ef51"}
+learn.load('resnet50_stage2')   #We load the weights with best perfomances
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 170}, colab_type="code", executionInfo={'elapsed': 2471, 'status': 'ok', 'timestamp': 1585487283868, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="U9Q6aYBy8Fsf", outputId="b32c1043-cb5f-4315-e353-c8b5fed61c28"}
+# !ls /root/.fastai/data/bird/
+```
+
+```{python colab={}, colab_type="code", id="AZx_Wi2kDEju"}
+data.add_test(ImageList.from_folder('/root/.fastai/data/bird/PNG_test_images'))
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 17}, colab_type="code", executionInfo={'elapsed': 34242, 'status': 'ok', 'timestamp': 1585492724705, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="5D5Y0WMlqSQR", outputId="618f3222-1fed-4eb7-bac0-a65206e455b6"}
+preds,y = learn.get_preds(DatasetType.Test)
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 17}, colab_type="code", executionInfo={'elapsed': 306572, 'status': 'ok', 'timestamp': 1585493114748, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="TcD8CJP4s28g", outputId="021d631b-a665-4716-c8e5-506e10acb3b8"}
+preds_tta, _ = learn.TTA(ds_type=DatasetType.Test)
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 34}, colab_type="code", executionInfo={'elapsed': 878, 'status': 'ok', 'timestamp': 1585494339016, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="RlHlVRV60iYW", outputId="d001ffb5-5cf1-4d1a-ce4f-e933bda0a480"}
+(preds.shape, preds_tta.shape)  #We have a 89 predictions (one for each label) for each image
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 238}, colab_type="code", executionInfo={'elapsed': 570, 'status': 'ok', 'timestamp': 1585493486886, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="C05hO0CXxjvb", outputId="d54fca2a-64a3-4b05-c454-cc38a01b5172"}
+preds
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 136}, colab_type="code", executionInfo={'elapsed': 770, 'status': 'ok', 'timestamp': 1585493541590, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="dDpCUamrweWK", outputId="8bf28dca-6e18-4441-cf8c-44e38a766ef3"}
+preds_tta
+```
+
+```{python colab={'base_uri': 'https://localhost:8080/', 'height': 187}, colab_type="code", executionInfo={'elapsed': 567, 'status': 'ok', 'timestamp': 1585494497083, 'user': {'displayName': 'Hani Nabulsi', 'photoUrl': '', 'userId': '09960193241088186600'}, 'user_tz': -120}, id="SAxzc4ke0UY7", outputId="61bc6b3b-6b79-44a6-d47d-fc0a8eb67b61"}
+learn.data.classes[:10]  #With preds and preds_tta we have all images with highest probability for "" class!!! Why????
+```
