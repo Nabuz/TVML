@@ -1,4 +1,5 @@
-------------------------------------MultiLabelBirdVer2.ipynb---------------------------------------------
+------------------------------------MultiLabelBirdVer2.ipynb------------------------------------------
+
 ######Cosa è stato aggiunto?#########
 
 E' stata modificata la visualizzzione dei dizionari (print(dictionary)) in modo da non prendere troppo
@@ -10,7 +11,7 @@ spazio
 
 
 
-------------------------------------MultiLabelBird.ipynb-------------------------------------------------
+------------------------------------MultiLabelBird.ipynb---------------------------------------------
 
 
 #######Come modificare il codice######
