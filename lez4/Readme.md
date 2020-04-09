@@ -45,7 +45,8 @@ D1-D15: timedelta, such as days between previous transaction, etc.
 
 M1-M9: match, such as names on card and address, etc.
 
-------------------------------------------------------------------------------------------------
+
+###Infos about Vesta features
 Vxxx: Vesta engineered rich features, including ranking, counting, and other entity relations.
 “For example, how many times the payment card associated with a IP and email or address appeared 
 in 24 hours time range, etc.”
@@ -53,7 +54,7 @@ in 24 hours time range, etc.”
 clustering, a time-period or condition, so the value is finite and has ordering (or ranking). 
 I wouldn't recommend to treat any of them as categorical. If any of them resulted in binary by 
 chance, it maybe worth trying."
-------------------------------------------------------------------------------------------------
+
 
 ###Identity Table
 
