@@ -46,7 +46,8 @@ D1-D15: timedelta, such as days between previous transaction, etc.
 M1-M9: match, such as names on card and address, etc.
 
 
-###Infos about Vesta features
+###Infos about Vesta features###
+
 Vxxx: Vesta engineered rich features, including ranking, counting, and other entity relations.
 “For example, how many times the payment card associated with a IP and email or address appeared 
 in 24 hours time range, etc.”
@@ -56,7 +57,7 @@ I wouldn't recommend to treat any of them as categorical. If any of them resulte
 chance, it maybe worth trying."
 
 
-###Identity Table
+###Identity Table###
 
 Variables in this table are identity information – network connection information (IP, ISP, Proxy, 
 etc) and digital signature (UA/browser/os/version, etc) associated with transactions.
