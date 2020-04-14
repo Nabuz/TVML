@@ -2,14 +2,16 @@
 
 In google drive path (TVML/lez4) add a file Fraud_Detection_Name_Surname.ipynb
 
---------------PROBLEMS:----------------------------------------------------------------------------
+--------------PROBLEMS TO FIX:----------------------------------------------------------------------------
 
 The dataframe needs to be rebalanced (Fraud/not Fraud)
+
+In EDA (Exploratory Data Analisys) problems with some graphs (aren't visualized correctly or show to muc more)
 
 Need some way to reduce number of digits: (faster_round(X,4)
 faster_round(X_test,4))
 
-In general need to developt the prediction part (some traditional Machine Learning CLassificator vs Deep Learning classificator)
+Need to developt the prediction part (some traditional Machine Learning CLassificator vs Deep Learning classificator)
 
 --------------METADATA DESCRIPTION:----------------------------------------------------------------
 
