@@ -1,8 +1,8 @@
--------------HOW TO ADD A NEW FILE (GOOGLE DRIVE ONLY!!!):------------------------------------
+-------------HOW TO ADD A NEW FILE (GOOGLE DRIVE ONLY!!!):-----------------------------------------
 
 In google drive path (TVML/lez4) add a file Fraud_Detection_Name_Surname.ipynb
 
---------------PROBLEMS:---------------------------------------------------------------------------
+--------------PROBLEMS:----------------------------------------------------------------------------
 
 The dataframe needs to be rebalanced (Fraud/not Fraud)
 
@@ -11,7 +11,7 @@ faster_round(X_test,4))
 
 In general need to developt the prediction part (some traditional Machine Learning CLassificator vs Deep Learning classificator)
 
---------------METADATA DESCRIPTION:---------------------------------------------------------------
+--------------METADATA DESCRIPTION:----------------------------------------------------------------
 
 ###Transaction table###
 
