@@ -17,7 +17,8 @@ faster_round(X_test,4))
 +Need to developt the prediction part (some traditional Machine Learning CLassificators vs Deep Learning Classificator)
 
 +Add "Functions used in this Kernel" (here: https://www.kaggle.com/artgor/eda-and-models). It's hard code! With this function you can:
- 1) Minimize the ram usage (the csv/dataframe are quite big!!!) 2)Calling ML classificator in one shot.
+ 1) Minimize the ram usage (the csv/dataframe are quite big!!!) 
+ 2)Calling ML classificator in one shot.
 
 --------------METADATA DESCRIPTION:----------------------------------------------------------------
 
