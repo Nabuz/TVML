@@ -6,6 +6,7 @@ In google drive path (TVML/lez4) add a file Fraud_Detection_Name_Surname.ipynb
 
 --------------PROBLEMS TO FIX:----------------------------------------------------------------------------
 
+
 +The dataframe needs to be rebalanced (Fraud/not Fraud)
 
 +In EDA (Exploratory Data Analisys) problems with some graphs (aren't visualized correctly or show to much!!!)
@@ -14,6 +15,10 @@ In google drive path (TVML/lez4) add a file Fraud_Detection_Name_Surname.ipynb
 faster_round(X_test,4))
 
 +Need to developt the prediction part (some traditional Machine Learning CLassificators vs Deep Learning Classificator)
+
++Add "Functions used in this Kernel" (here: https://www.kaggle.com/artgor/eda-and-models). It's hard code! With this function you can:
+ 1) Minimize the ram usage (the csv/dataframe are quite big!!!) 
+ 2)Calling ML classificator in one shot.
 
 --------------METADATA DESCRIPTION:----------------------------------------------------------------
 
